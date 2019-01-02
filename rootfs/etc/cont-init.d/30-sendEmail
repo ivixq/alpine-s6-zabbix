@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bash
+
+SMTP_SERVER=${SMTP_SERVER:-"xx"}
+SENDER_MAIL_ADDR=${SENDER_MAIL_ADDR:-"xx@xx.com"}
+EMAIL_PASS=${EMAIL_PASS:-"123456"}
+
+INIT_FILE="`basename $0`-init"
+
+if [ ! -f /tmp/state/$INIT_FILE ]; then
+   sed -e "s/<SMTP_SERVER>/$SMTP_SERVER/g" -i /etc/zabbix/alertscripts/html_email.sh
+   sed -e "s/<SENDER_MAIL_ADDR>/$SENDER_MAIL_ADDR/g" -i /etc/zabbix/alertscripts/html_email.sh
+   sed -e "s/<EMAIL_PASS>/$EMAIL_PASS/g" -i /etc/zabbix/alertscripts/html_email.sh
+   touch /tmp/state/$INIT_FILE
+fi
+
