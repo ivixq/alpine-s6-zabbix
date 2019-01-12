@@ -2,7 +2,7 @@ FROM ivixq/alpine-s6
 MAINTAINER ivixq
 
 ## Install zabbix php7 apache
-RUN apk --no-cache upgrade && \
+RUN apk update && apk --no-cache upgrade && \
     apk --no-cache add \
         zabbix zabbix-mysql zabbix-webif zabbix-setup zabbix-utils \
         php7-apache2 php7-session php7-mysqli php7-mbstring php7-ldap ttf-dejavu \
