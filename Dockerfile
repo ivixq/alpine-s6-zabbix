@@ -8,15 +8,15 @@ RUN apk update && apk --no-cache upgrade && \
         php7-apache2 php7-session php7-mysqli php7-mbstring php7-ldap ttf-dejavu \
 #       php5-apache2 php5-bcmath php5-ctype php5-gd php5-gettext php5-json php5-ldap \
 #       php5-mysqli php5-sockets php5-xmlreader ttf-dejavu \
-        net-snmp net-snmp-tools mariadb-client nmap perl && \
+        net-snmp net-snmp-tools mariadb-client nmap && \
     rm -rf /var/cache/apk/*
 
 COPY rootfs /
 
 RUN chmod 640 /etc/zabbix/zabbix_server.conf \
     && chown root:zabbix /etc/zabbix/zabbix_server.conf \
-    && chmod 755 /etc/zabbix/alertscripts/* \
-    && chown zabbix:zabbix /etc/zabbix/alertscripts/*
+    && chown zabbix:zabbix /etc/zabbix/alertscripts/* \
+    && chmod +x /etc/zabbix/alertscripts/*
 
 ## Export volumes directory
 VOLUME ["/etc/zabbix/externalscripts"]
