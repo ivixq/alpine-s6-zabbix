@@ -1,9 +1,9 @@
 FROM ivixq/alpine-s6
-MAINTAINER ivixq
+LABEL maintainer=ivixq
 
 ## Install zabbix php7 apache
-RUN apk --no-cache update && \
-    apk --no-cache upgrade && \
+RUN apk --no-cache update ; \
+    apk --no-cache upgrade ; \
     apk --no-cache add \
         zabbix zabbix-mysql zabbix-webif zabbix-setup zabbix-utils \
         php7-apache2 php7-session php7-mysqli php7-mbstring php7-ldap ttf-dejavu \
@@ -14,10 +14,10 @@ RUN apk --no-cache update && \
 
 COPY rootfs /
 
-RUN chmod 640 /etc/zabbix/zabbix_server.conf \
-    && chown root:zabbix /etc/zabbix/zabbix_server.conf \
-    && chown zabbix:zabbix /etc/zabbix/alertscripts/* \
-    && chmod +x /etc/zabbix/alertscripts/*
+RUN chmod 640 /etc/zabbix/zabbix_server.conf ; \
+    chown root:zabbix /etc/zabbix/zabbix_server.conf ; \
+    chown zabbix:zabbix /etc/zabbix/alertscripts/* ; \
+    chmod +x /etc/zabbix/alertscripts/*
 
 ## Export volumes directory
 VOLUME ["/etc/zabbix/externalscripts"]
