@@ -1,10 +1,8 @@
 #!/usr/bin/with-contenv bash
-## Debug Mode
 if [ "$DEBUG_MODE" = "TRUE" ] || [ "$DEBUG_MODE" = "true" ];  then
   set -x
 fi
 
-## default parameters
 DB_HOST=${DB_HOST:-"zbx-db"}
 DB_PORT=${DB_PORT:-"3306"}
 DB_NAME=${DB_NAME:-"zabbix"}
@@ -15,38 +13,36 @@ ZABBIX_SERVER=${ZABBIX_SERVER:-"localhost"}
 ZABBIX_PORT=${ZABBIX_PORT:-"10051"}
 HTTP_FQDN=${HTTP_FQDN:-"localhost"}
 
-INIT_FILE="`basename $0`-init"
 mysqlcmd="mysql -h$DB_HOST -P$DB_PORT -u$DB_USER -p$DB_PASS -A -N"
 
-if [ ! -f /tmp/state/$INIT_FILE ]; then
-    while ! $mysqlcmd -e "USE zabbix" >/dev/null 2>&1; do
-        sleep 1
-    done
+if [ ! -f /tmp/state/`basename $0`-init ]; then
+  while ! $mysqlcmd -e "USE zabbix" >/dev/null 2>&1; do
+    sleep 1
+  done
   
-    zabbix_mysql_v="/usr/share/zabbix/database/mysql"
-    $mysqlcmd -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
-    if ! $mysqlcmd $DB_NAME -e "select count(*) from users;"; then
-        echo "[i] import inital data"
-        $mysqlcmd -D "$DB_NAME" < "${zabbix_mysql_v}/schema.sql"
-        $mysqlcmd -D "$DB_NAME" < "${zabbix_mysql_v}/images.sql"
-        $mysqlcmd -D "$DB_NAME" < "${zabbix_mysql_v}/data.sql"
-    fi
+  zabbix_mysql_v="/usr/share/zabbix/database/mysql"
+  $mysqlcmd -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
+  if ! $mysqlcmd $DB_NAME -e "select count(*) from users;"; then
+    echo "[i] import inital data"
+    $mysqlcmd -D "$DB_NAME" < "${zabbix_mysql_v}/schema.sql"
+    $mysqlcmd -D "$DB_NAME" < "${zabbix_mysql_v}/images.sql"
+    $mysqlcmd -D "$DB_NAME" < "${zabbix_mysql_v}/data.sql"
+  fi
 
-    sed -e "s/<DB_HOST>/$DB_HOST/g" \
-        -e "s/<DB_NAME>/$DB_NAME/g" \
-        -e "s/<DB_USER>/$DB_USER/g" \
-        -e "s/<DB_PASS>/$DB_PASS/g" \
-        -e "s/<DB_PORT>/$DB_PORT/g" -i /etc/zabbix/zabbix_server.conf
+  sed -e "s/<DB_HOST>/$DB_HOST/g" \
+      -e "s/<DB_NAME>/$DB_NAME/g" \
+      -e "s/<DB_USER>/$DB_USER/g" \
+      -e "s/<DB_PASS>/$DB_PASS/g" \
+      -e "s/<DB_PORT>/$DB_PORT/g" -i /etc/zabbix/zabbix_server.conf
 
-    sed -e "s/<DB_HOST>/$DB_HOST/g" \
-        -e "s/<DB_PORT>/$DB_PORT/g" \
-        -e "s/<DB_NAME>/$DB_NAME/g" \
-        -e "s/<DB_USER>/$DB_USER/g" \
-        -e "s/<DB_PASS>/$DB_PASS/g" \
-        -e "s/<ZABBIX_SERVER>/$ZABBIX_SERVER/g" \
-        -e "s/<ZABBIX_PORT>/$ZABBIX_PORT/g" -i /usr/share/webapps/zabbix/conf/zabbix.conf.php
+  sed -e "s/<DB_HOST>/$DB_HOST/g" \
+      -e "s/<DB_PORT>/$DB_PORT/g" \
+      -e "s/<DB_NAME>/$DB_NAME/g" \
+      -e "s/<DB_USER>/$DB_USER/g" \
+      -e "s/<DB_PASS>/$DB_PASS/g" \
+      -e "s/<ZABBIX_SERVER>/$ZABBIX_SERVER/g" \
+      -e "s/<ZABBIX_PORT>/$ZABBIX_PORT/g" -i /usr/share/webapps/zabbix/conf/zabbix.conf.php
     
-    mkdir -p /tmp/state
-    touch /tmp/state/$INIT_FILE
+  mkdir -p /tmp/state
+  touch /tmp/state/`basename $0`-init
 fi
-
