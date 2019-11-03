@@ -6,7 +6,7 @@ RUN apk --no-cache update ; \
     apk --no-cache add \
         zabbix zabbix-mysql zabbix-webif zabbix-setup zabbix-utils \
         php7-apache2 php7-session php7-mysqli php7-mbstring php7-ldap ttf-dejavu \
-        net-snmp net-snmp-tools mariadb-client nmap && \
+        net-snmp net-snmp-tools mariadb-client nmap ; \
     rm -rf /var/cache/apk/*
 
 COPY rootfs /
@@ -19,4 +19,3 @@ RUN chmod 640 /etc/zabbix/zabbix_server.conf ; \
 VOLUME ["/etc/zabbix/externalscripts"]
 
 EXPOSE 10051/tcp 10052/tcp 80/tcp 162/udp
-
