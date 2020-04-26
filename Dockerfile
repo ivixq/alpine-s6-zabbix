@@ -1,12 +1,15 @@
 FROM ivixq/alpine-s6:edge
 LABEL maintainer=ivixq
 
+ENV ENABLE_ZABBIX=true \
+    ENABLE_SMTP=true
+
 RUN apk --no-cache update ; \
     apk --no-cache upgrade ; \
     apk --no-cache add \
         zabbix zabbix-mysql zabbix-webif zabbix-setup zabbix-utils \
         php7-apache2 php7-session php7-mysqli php7-mbstring php7-ldap ttf-dejavu \
-        net-snmp net-snmp-tools mariadb-client nmap ; \
+        net-snmp net-snmp-tools mariadb-client nmap iputils jwhois; \
     rm -rf /var/cache/apk/*
 
 COPY rootfs /
