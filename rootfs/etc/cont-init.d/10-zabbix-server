@@ -21,7 +21,8 @@ if [ ! -f /tmp/state/`basename $0`-init ]; then
   done
   
   zabbix_mysql_v="/usr/share/zabbix/database/mysql"
-  $mysqlcmd -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
+#  $mysqlcmd -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
+  $mysqlcmd -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8 DEFAULT COLLATE utf8_bin;"
   if ! $mysqlcmd $DB_NAME -e "select count(*) from users;"; then
     echo "[i] import inital data"
     $mysqlcmd -D "$DB_NAME" < "${zabbix_mysql_v}/schema.sql"
