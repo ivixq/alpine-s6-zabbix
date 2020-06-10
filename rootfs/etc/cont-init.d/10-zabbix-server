@@ -20,7 +20,7 @@ if [ ! -f /tmp/state/`basename $0`-init ]; then
     sleep 1
   done
   
-  zabbix_mysql_v="/usr/share/zabbix/database/mysql"
+  zabbix_mysql_v="/usr/share/zbx_mysql"
 #  $mysqlcmd -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
   $mysqlcmd -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8 COLLATE utf8_bin;"
   if ! $mysqlcmd $DB_NAME -e "select count(*) from users;"; then
