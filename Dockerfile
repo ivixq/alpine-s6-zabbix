@@ -7,12 +7,12 @@ ENV ENABLE_ZABBIX=true \
 RUN apk --no-cache update ; \
     apk --no-cache upgrade ; \
     apk --no-cache add \
-        zabbix zabbix-mysql zabbix-webif zabbix-setup zabbix-utils \
+        zabbix zabbix-mysql zabbix-webif zabbix-setup \
         php7-apache2 php7-session php7-mysqli php7-mbstring php7-ldap ttf-dejavu \
         net-snmp net-snmp-tools mariadb-client nmap iputils jwhois; \
     rm -rf /var/cache/apk/*
 
-COPY rootfs /
+ADD /install /
 
 RUN chmod 640 /etc/zabbix/zabbix_server.conf ; \
     chown root:zabbix /etc/zabbix/zabbix_server.conf ; \
